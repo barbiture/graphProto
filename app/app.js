@@ -5,9 +5,11 @@ import * as d3Dispatch from "d3-dispatch";
 import * as data from '../fixtures/graph.json';
 
 var colors = d3.scaleOrdinal(d3.schemeCategory10);
-
-var svg = d3.select("svg"),
-	width = +window.innerWidth,
+var svg = d3.select("svg").attr("width", "100%")
+ .attr("height", "100%")
+ .call(d3.zoom().on("zoom", function () {
+    svg.attr("transform", d3.event.transform)
+ })), width = +window.innerWidth,
 	height = +window.innerHeight,
 	node,
 	link,
@@ -103,6 +105,7 @@ function update(links, nodes) {
 		.data(links)
 		.enter()
 		.append("line")
+		
 		.attrs({
 			"stroke-width": (d, i) => lineWeight(d.weight),
 			weight: (d) => ("weight" in d ? d.weight : "default"),
@@ -115,53 +118,10 @@ function update(links, nodes) {
 				if (d.direction === "both" || d.direction === "reverse")
 					return "url(#arrowStart)";
 			},
+			"stroke": function(d, i) {
+				return colors(i);
+			}
 		});
-	// link.append("title").text(function(d) {
-	// 	return d.type;
-	// });
-
-	edgepaths = svg
-		.selectAll(".edgepath")
-		.data(links)
-		.enter()
-		.append("path")
-		.attrs({
-			class: "edgepath",
-			"fill-opacity": 0,
-			"stroke-opacity": 0,
-			id: function(d, i) {
-				return "edgepath" + i;
-			},
-		})
-		.style("pointer-events", "none");
-
-	edgelabels = svg
-		.selectAll(".edgelabel")
-		.data(links)
-		.enter()
-		.append("text")
-		.style("pointer-events", "none")
-		.attrs({
-			class: "edgelabel",
-			id: function(d, i) {
-				return "edgelabel" + i;
-			},
-			"font-size": 10,
-			fill: "#aaa",
-		});
-
-	edgelabels
-		.append("textPath")
-		.attr("xlink:href", function(d, i) {
-			return "#edgepath" + i;
-		})
-		.style("text-anchor", "middle")
-		.style("pointer-events", "none")
-		.attr("startOffset", "50%")
-		.text(function(d) {
-			return d.type;
-		});
-
 	node = svg
 		.selectAll(".node")
 		.data(nodes)
@@ -194,7 +154,7 @@ function update(links, nodes) {
 		.text(function(d) {
 			return d.title;
 		});
-	const nodesDescription = nodes.filter((i) => "description" in i);
+	const nodesDescription = nodes.filter(i => "description" in i);
 	popup = d3
 		.select("#popup")
 		.selectAll("div")
@@ -210,7 +170,6 @@ function update(links, nodes) {
 	simulation.nodes(nodes).on("tick", ticked);
 	simulation.force("link").links(links);
 }
-
 function ticked() {
 	link
 		.attr("x1", function(d) {
@@ -227,31 +186,6 @@ function ticked() {
 		});
 	node.attr("transform", function(d) {
 		return "translate(" + d.x + ", " + d.y + ")";
-	});
-
-	edgepaths.attr("d", function(d) {
-		return (
-			"M " +
-			d.source.x +
-			" " +
-			d.source.y +
-			" L " +
-			d.target.x +
-			" " +
-			d.target.y
-		);
-	});
-
-	edgelabels.attr("transform", function(d) {
-		if (d.target.x < d.source.x) {
-			var bbox = this.getBBox();
-
-			const rx = bbox.x + bbox.width / 2;
-			const ry = bbox.y + bbox.height / 2;
-			return "rotate(180 " + rx + " " + ry + ")";
-		} else {
-			return "rotate(0)";
-		}
 	});
 
 	popup.style("top", (d) => `${d.y + 20}px`);
@@ -274,3 +208,4 @@ function clicked(d) {
 	const thisPopup = popup.filter((p) => p.id === d.id);
 	thisPopup.attr("class", "active");
 }
+

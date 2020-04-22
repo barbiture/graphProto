@@ -18,7 +18,15 @@
         "title": "Node number 4",
         "id": 4,
         "description": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quis perferendis, amet totam eligendi velit dolores iste quam ut maxime quo aut aperiam, ipsum vitae officia quae non suscipit omnis reiciendis?"
-      }
+      },
+      {
+        "title": "Node number 5",
+        "id": 5
+      },
+      {
+        "title": "Node number 6",
+        "id": 6
+      },
     ],
     "links": [
       {
@@ -41,11 +49,24 @@
         "distance": 250,
         "direction": "reverse",
         "weight": "normal"
-      }
-      ,
+      },
       {
-        "source": 4,
-        "target": 2,
+        "source": 5,
+        "target": 1,
+        "distance": 250,
+        "direction": "both",
+        "weight": "normal"
+      },
+      {
+        "source": 2,
+        "target": 6,
+        "distance": 250,
+        "direction": "reverse",
+        "weight": "normal"
+      },
+      {
+        "source": 6,
+        "target": 3,
         "distance": 250,
         "direction": "reverse",
         "weight": "normal"
