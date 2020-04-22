@@ -4,7 +4,9 @@
   "description": "grafiq prototype",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npx parcel index.html",
+    "fake": "npx json-server --port 3030 ./fixtures/graph.json"
   },
   "author": "barbi",
   "license": "ISC",
