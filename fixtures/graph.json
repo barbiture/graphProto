@@ -1,0 +1,55 @@
+{
+  "graph": {
+    "nodes": [
+      {
+        "title": "Node number 1",
+        "description": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nisi eveniet iusto, dignissimos nulla architecto dolore cupiditate quod, eaque, et corporis magnam eos magni reprehenderit maxime veniam autem ullam totam rerum!",
+        "id": 1
+      },
+      {
+        "title": "Node number 2",
+        "id": 2
+      },
+      {
+        "title": "Node number 3",
+        "id": 3
+      },
+      {
+        "title": "Node number 4",
+        "id": 4,
+        "description": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quis perferendis, amet totam eligendi velit dolores iste quam ut maxime quo aut aperiam, ipsum vitae officia quae non suscipit omnis reiciendis?"
+      }
+    ],
+    "links": [
+      {
+        "source": 1,
+        "target": 2,
+        "since": 2010,
+        "distance": 250,
+        "direction": "both",
+        "weight": "heavy"
+      },
+      {
+        "source": 2,
+        "target": 3,
+        "distance": 450,
+        "direction": "forward"
+      },
+      {
+        "source": 3,
+        "target": 4,
+        "distance": 250,
+        "direction": "reverse",
+        "weight": "normal"
+      }
+      ,
+      {
+        "source": 4,
+        "target": 2,
+        "distance": 250,
+        "direction": "reverse",
+        "weight": "normal"
+      }
+    ]
+  }
+}

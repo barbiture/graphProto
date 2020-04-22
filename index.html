@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title></title>
+  </head>
+  <style>
+    circle {
+      fill: cadetblue;
+    }
+    line {
+      stroke: #ccc;
+    }
+    text {
+      text-anchor: middle;
+      font-family: "Helvetica Neue", Helvetica, sans-serif;
+      fill: #666;
+      font-size: 16px;
+    }
+    .node {
+    }
+    .link {
+      stroke: #999;
+      stroke-opacity: 0.6;
+      /*stroke-width: 1px;*/
+    }
+    svg {
+      width: 100vw;
+      height: 100vh;
+    }
+    #popup > div {
+      position: fixed;
+      background: #fafafa;
+      padding: 15px;
+      border-radius: 5px;
+      border: 1px solid #f5f5f5;
+      display: none;
+    }
+    #popup > div.active {
+      display: block;
+    }
+  </style>
+  <body>
+    <div id="popup"></div>
+    <svg></svg>
+    <script src="./app/app.js"></script>
+  </body>
+</html>
