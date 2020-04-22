@@ -5,11 +5,8 @@ import * as d3Dispatch from "d3-dispatch";
 import * as data from '../fixtures/graph.json';
 
 var colors = d3.scaleOrdinal(d3.schemeCategory10);
-var svg = d3.select("svg").attr("width", "100%")
- .attr("height", "100%")
- .call(d3.zoom().on("zoom", function () {
-    svg.attr("transform", d3.event.transform)
- })), width = +window.innerWidth,
+var svg = d3.select("svg"),
+	width = +window.innerWidth,
 	height = +window.innerHeight,
 	node,
 	link,
@@ -17,7 +14,6 @@ var svg = d3.select("svg").attr("width", "100%")
 	popup,
 	edgepaths,
 	edgelabels;
-
 var simulation = d3
 	.forceSimulation()
 	.force(
@@ -51,17 +47,6 @@ const lineWeight = (weight) => {
 			return 3;
 	}
 };
-const markerSize = (weight) => {
-	switch (weight) {
-		case "heavy":
-			return 2;
-		case "normal":
-			return 12;
-		default:
-			return 14;
-	}
-};
-
 defs
 	.append("marker")
 	.attrs({
@@ -99,17 +84,21 @@ defs
 		fill: "#999",
 		stroke: "none",
 	});
+svg
+ .call(d3.zoom().on("zoom", function () {
+    svg.attr("transform", d3.event.transform)
+    .exit();
+ }))
 function update(links, nodes) {
 	link = svg
 		.selectAll(".link")
 		.data(links)
 		.enter()
 		.append("line")
-		
 		.attrs({
-			"stroke-width": (d, i) => lineWeight(d.weight),
-			weight: (d) => ("weight" in d ? d.weight : "default"),
-			class: "link",
+			"stroke-width": d => lineWeight(d.weight),
+			"weight": d => ("weight" in d ? d.weight : "default"),
+			"class": "link",
 			"marker-end": (d, i) => {
 				if (d.direction === "both" || d.direction === "forward")
 					return "url(#arrowEnd)";
@@ -118,9 +107,7 @@ function update(links, nodes) {
 				if (d.direction === "both" || d.direction === "reverse")
 					return "url(#arrowStart)";
 			},
-			"stroke": function(d, i) {
-				return colors(i);
-			}
+			"stroke": (_, i) => colors(i)
 		});
 	node = svg
 		.selectAll(".node")
@@ -134,7 +121,7 @@ function update(links, nodes) {
 				.drag()
 				.on("start", dragstarted)
 				.on("drag", dragged)
-			//.on("end", dragended)
+				.on("end", dragended)
 		);
 
 	node
@@ -142,18 +129,15 @@ function update(links, nodes) {
 		.attr("r", 10)
 		.style("fill", function(d, i) {
 			return colors(i);
-		});
+		})
+		.exit();
 
-	node.append("title").text(function(d) {
-		return d.id;
-	});
+	node.append("title").text(d => d.id);
 
 	node
 		.append("text")
 		.attr("dy", -15)
-		.text(function(d) {
-			return d.title;
-		});
+		.text(d => d.title);
 	const nodesDescription = nodes.filter(i => "description" in i);
 	popup = d3
 		.select("#popup")
@@ -163,33 +147,21 @@ function update(links, nodes) {
 		.append("div")
 		.join(node);
 
-	popup.append("p").text(function(d) {
-		return "description" in d ? d.description : "";
-	});
+	popup.append("p").text((d) => d.description);
 
 	simulation.nodes(nodes).on("tick", ticked);
 	simulation.force("link").links(links);
 }
 function ticked() {
 	link
-		.attr("x1", function(d) {
-			return d.source.x;
-		})
-		.attr("y1", function(d) {
-			return d.source.y;
-		})
-		.attr("x2", function(d) {
-			return d.target.x;
-		})
-		.attr("y2", function(d) {
-			return d.target.y;
-		});
-	node.attr("transform", function(d) {
-		return "translate(" + d.x + ", " + d.y + ")";
-	});
+		.attr("x1", d => d.source.x.toFixed(0))
+		.attr("y1", d => d.source.y.toFixed(0))
+		.attr("x2", d => d.target.x.toFixed(0))
+		.attr("y2", d => d.target.y.toFixed(0))
+	node.attr("transform", d => "translate(" + d.x.toFixed(0) + ", " + d.y.toFixed(0) + ")");
 
-	popup.style("top", (d) => `${d.y + 20}px`);
-	popup.style("left", (d) => `${d.x + 20}px`);
+	popup.style("top", d => `${d.y + 20}px`);
+	popup.style("left", d => `${d.x + 20}px`);
 }
 
 function dragstarted(d) {
@@ -202,10 +174,17 @@ function dragged(d) {
 	d.fx = d3.event.x;
 	d.fy = d3.event.y;
 }
+function dragended(d) {
+	// node.exit();
+}
 
 function clicked(d) {
 	popup.filter((p) => p.id !== d.id).attr("class", null);
 	const thisPopup = popup.filter((p) => p.id === d.id);
-	thisPopup.attr("class", "active");
+	if(!thisPopup.attr('class')) {
+		thisPopup.attr("class", "active");
+	} else {
+		thisPopup.attr("class", null);
+	}
 }
 

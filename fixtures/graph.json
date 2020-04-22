@@ -60,14 +60,14 @@
       {
         "source": 2,
         "target": 6,
-        "distance": 250,
+        "distance": 550,
         "direction": "reverse",
         "weight": "normal"
       },
       {
         "source": 6,
         "target": 3,
-        "distance": 250,
+        "distance": 750,
         "direction": "reverse",
         "weight": "normal"
       }
